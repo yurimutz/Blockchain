@@ -15,6 +15,15 @@ contract Turing is ERC20 {
 
     // ATIVIDADE 12
     mapping(string => address) public users;
+
+    // infelizmente foi necessario criar esse array para verificar o msg.sender no vote
+    string[] public codinomes = [
+        "roberta", "nome1", "nome2", "nome3", "nome4",
+        "nome5", "nome6", "nome7", "nome8", "nome9",
+        "nome10", "nome11", "nome12", "nome13", "nome14",
+        "nome15", "nome16", "nome17", "nome18", "nome19"
+    ];
+
     mapping(address => mapping(address => bool)) public hasVote;
     mapping(address => uint256) public acessos;
 
@@ -75,12 +84,24 @@ contract Turing is ERC20 {
     }
 
     function vote(string memory codinome, uint256 qtde_de_Turings) public {
-        require(voting = true, "A votacao nao esta ativa");
-        require(users[codinome] != address(0), "Pessoa nao autorizada" );
-        require(users["codinome"] != msg.sender, "Voce nao pode votar em voce mesmo");
+        require(voting == true, "A votacao nao esta ativa");
+
+        //verifica se o msg.sender esta cadastrado
+        bool autorizado = (msg.sender == owner);
+        for (uint256 i = 0; i < codinomes.length; i++) {
+            if (users[codinomes[i]] == msg.sender) {
+                autorizado = true;
+                break;
+            }
+        }
+
+        require(autorizado, "Pessoa nao autorizada");
+        require(users[codinome] != address(0), "Destinatario nao encontrado");
+        require(users[codinome] != msg.sender, "Voce nao pode votar em voce mesmo");
         require(qtde_de_Turings > 0 && qtde_de_Turings <= 2, "Quantidade de turings invalidas");
         require(hasVote[msg.sender][users[codinome]] == false, "Voce ja votou nesse cara");
 
+        _mint(users[codinome], qtde_de_Turings * (10 ** uint256(decimals())));
         hasVote[msg.sender][users[codinome]] = true;
         acessos[msg.sender]++;
         if(acessos[msg.sender] == 10){

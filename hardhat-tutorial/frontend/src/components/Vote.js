@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Vote({ vote, tokenSymbol }) {
+export function Vote({ vote, tokenSymbol, codinomes = [] }) {
   return (
     <div className="mb-4">
       <h4>Votar (Vote)</h4>
@@ -18,14 +18,22 @@ export function Vote({ vote, tokenSymbol }) {
         }}
       >
         <div className="form-group">
-          <label>Codinome do destinatário</label>
-          <input
+          <label>Codinome do aluno</label>
+          <select
             className="form-control"
-            type="text"
             name="codinome"
-            placeholder="Ex: nome1"
+            defaultValue=""
             required
-          />
+          >
+            <option value="" disabled>
+              Selecione um codinome...
+            </option>
+            {codinomes.map((cod) => (
+              <option key={cod} value={cod}>
+                {cod}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group">
           <label>Quantidade de {tokenSymbol} (1 ou 2)</label>
@@ -47,3 +55,4 @@ export function Vote({ vote, tokenSymbol }) {
     </div>
   );
 }
+

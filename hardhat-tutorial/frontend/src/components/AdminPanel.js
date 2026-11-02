@@ -6,6 +6,7 @@ export function AdminPanel({
   votingOn,
   votingOff,
   tokenSymbol,
+  codinomes = [],
 }) {
   return (
     <div className="card p-3 mb-4 bg-light">
@@ -47,14 +48,22 @@ export function AdminPanel({
         >
           <div className="form-row">
             <div className="form-group col-md-6">
-              <label>Codinome</label>
-              <input
+              <label>Codinome do aluno</label>
+              <select
                 className="form-control"
-                type="text"
                 name="codinome"
-                placeholder="Ex: nome1"
+                defaultValue=""
                 required
-              />
+              >
+                <option value="" disabled>
+                  Selecione um codinome...
+                </option>
+                {codinomes.map((cod) => (
+                  <option key={cod} value={cod}>
+                    {cod}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-group col-md-4">
               <label>Qtd. de {tokenSymbol}</label>
@@ -128,3 +137,4 @@ export function AdminPanel({
     </div>
   );
 }
+
