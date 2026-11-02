@@ -1,0 +1,14 @@
+subir blockchain local:
+    -pasta raiz
+    -npx hardhat node
+
+publicar o contrato localmente:
+    -npx hardhat run scripts/deploy.js --network localhost
+
+publicar o contrato na sepolia
+    -npx hardhat run scripts/deploy.js --network sepolia
+
+rodar o front:
+    -entrar no folder frontend
+    -npm start
+

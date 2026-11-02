@@ -15,37 +15,37 @@ async function main() {
 
   // ethers is available in the global scope
   const [deployer] = await ethers.getSigners();
-  console.log(
-    "Deploying the contracts with the account:",
-    await deployer.getAddress()
-  );
+  const deployerAddress = await deployer.getAddress();
+  console.log("Deploying the contracts with the account:", deployerAddress);
 
-  console.log("Account balance:", (await deployer.getBalance()).toString());
+  const balance = await ethers.provider.getBalance(deployerAddress);
+  console.log("Account balance:", balance.toString());
 
-  const Token = await ethers.getContractFactory("Token");
-  const token = await Token.deploy();
-  await token.deployed();
+  const Turing = await ethers.getContractFactory("Turing");
+  const token = await Turing.deploy();
+  await token.waitForDeployment();
 
-  console.log("Token address:", token.address);
+  const tokenAddress = await token.getAddress();
+  console.log("Turing contract address:", tokenAddress);
 
   // We also save the contract's artifacts and address in the frontend directory
-  saveFrontendFiles(token);
+  saveFrontendFiles(tokenAddress);
 }
 
-function saveFrontendFiles(token) {
+function saveFrontendFiles(tokenAddress) {
   const fs = require("fs");
   const contractsDir = path.join(__dirname, "..", "frontend", "src", "contracts");
 
   if (!fs.existsSync(contractsDir)) {
-    fs.mkdirSync(contractsDir);
+    fs.mkdirSync(contractsDir, { recursive: true });
   }
 
   fs.writeFileSync(
     path.join(contractsDir, "contract-address.json"),
-    JSON.stringify({ Token: token.address }, undefined, 2)
+    JSON.stringify({ Token: tokenAddress }, undefined, 2)
   );
 
-  const TokenArtifact = artifacts.readArtifactSync("Token");
+  const TokenArtifact = artifacts.readArtifactSync("Turing");
 
   fs.writeFileSync(
     path.join(contractsDir, "Token.json"),

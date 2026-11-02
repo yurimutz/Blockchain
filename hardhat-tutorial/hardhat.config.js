@@ -6,6 +6,7 @@
 // };
 
 require("@nomicfoundation/hardhat-toolbox");
+require("./tasks/faucet");
 
 // Ensure your configuration variables are set before executing the script
 const { vars } = require("hardhat/config");
