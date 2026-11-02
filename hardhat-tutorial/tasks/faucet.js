@@ -30,17 +30,21 @@ task("faucet", "Sends ETH and tokens to an address")
       return;
     }
 
-    const token = await ethers.getContractAt("Token", address.Token);
+    const token = await ethers.getContractAt("Turing", address.Token);
     const [sender] = await ethers.getSigners();
 
-    const tx = await token.transfer(receiver, 100);
+    // Update receiver as 'faucet_user' and issue 100 tokens
+    const tx0 = await token.updateUser("faucet_user", receiver);
+    await tx0.wait();
+
+    const tx = await token.issueToken("faucet_user", 100);
     await tx.wait();
 
     const tx2 = await sender.sendTransaction({
       to: receiver,
-      value: ethers.constants.WeiPerEther,
+      value: ethers.parseEther("1.0"),
     });
     await tx2.wait();
 
-    console.log(`Transferred 1 ETH and 100 tokens to ${receiver}`);
+    console.log(`Transferred 1 ETH and 100 TUR tokens to ${receiver}`);
   });
